@@ -4,3 +4,5 @@ allow the sender to reach its previous cwnd value sooner. This algorithm ensures
 bandwidth is sufficiently utilized in the presence of transient congestion. In this project, the
 aim is to validate ns-3 Scalable TCP implementation by comparing the results obtained from it
 to those obtained by simulating Linux Scalable TCP.
+
+Start with Docker installation procedure file and add the files,dumbbell-topology,wscript,parse_cwnd.py,overlap-gnuplotscriptCwnd as instruted in the installation file
