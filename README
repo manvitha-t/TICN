@@ -1,0 +1,6 @@
+Scalable TCP is a congestion control algorithm which does not reduce the congestion
+window (cwnd) by ½ like the traditional TCP. Instead, it reduces the cwnd by ⅞ with an aim to
+allow the sender to reach its previous cwnd value sooner. This algorithm ensures that the
+bandwidth is sufficiently utilized in the presence of transient congestion. In this project, the
+aim is to validate ns-3 Scalable TCP implementation by comparing the results obtained from it
+to those obtained by simulating Linux Scalable TCP.
