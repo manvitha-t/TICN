@@ -1,0 +1,145 @@
+open terminal and install docker using the following commands:
+
+sudo apt-get update
+
+sudo apt-get install docker.io
+
+sudo docker pull thehajime/ns-3-dce
+
+sudo docker run -i -t thehajime/ns-3-dce /bin/bash
+
+exit
+
+sudo docker ps -a
+
+sudo docker start username
+
+sudo docker exec -it username /bin/bash
+
+cd source/ns-3-dce
+
+./waf --run dce-iperf
+
+cd ..
+
+rm -r -f ns-3-dev/
+
+git clone https://gitlab.com/apoorvabhargava/ns-3-dev.git
+
+cd ns-3-dev
+
+git checkout LinuxPRRMergeRequest
+
+cd ..
+
+cd ns-3-dce
+
+mkdir results
+
+cd results
+
+mkdir dumbbell-topology
+
+cd dumbbell-topology
+
+mkdir overlapped
+
+cd
+
+
+
+
+
+goto new terminal and run the following commands
+
+sudo docker cp dumbbelltopologyns3receiver.cc dockername:/home/ns3dce/dce-linux-dev/source/ns-3-dce/example
+
+sudo docker cp wscript dockername:/home/ns3dce/dce-linux-dev/source/ns-3-dce
+
+sudo docker cp parse_cwnd.py dockername:/home/ns3dce/dce-linux-dev/source/ns-3-dce/utils
+
+sudo docker cp overlap-gnuplotscriptCwnd dockername:/home/ns3dce/dce-linux-dev/source/ns-3-dce/results/dumbbell-topology/overlapped
+
+
+
+go back to main terminal and run the following commands in dce-linux-dev
+
+
+export BAKE_HOME=`pwd`/bake
+export PATH=$PATH:$BAKE_HOME
+export PYTHONPATH=$PYTHONPATH:$BAKE_HOME
+
+bake.py configure -e dce-linux-dev
+
+bake.py build -vvv
+
+cd source/ns-3-dce
+
+./waf --run "dumbbelltopologyns3receiver --stack=linux -queue_disc_type=FifoQueueDisc -WindowScaling=true --Sack=true --stopTime=300 --delAckCount=1 --BQL=true --linux_prot=scalable"
+
+cd utils
+
+python parse_cwnd.py 2 2
+
+cd ..
+
+cd results/dumbbell-topology
+
+cp cwnd_data/A-linux.plotme overlapped/
+
+cd ..
+
+cd ..
+
+./waf --run "dumbbelltopologyns3receiver --stack=ns3 -queue_disc_type=FifoQueueDisc -WindowScaling=true --Sack=true --stopTime=300 --delAckCount=1 --BQL=true --transport_prot=TcpScalable --recovery=TcpLinuxPrrRecovery"
+
+cd results/dembbell-topology
+
+cp timestamp/cwndTraces/A-ns3.plotme overlapped/
+
+cd overlapped
+
+ls
+
+sudo apt-get install gnuplot
+
+gnuplot overlap-gnuplotscriptCwnd
+
+ls
+
+goto new terminal
+
+sudo docker cp  dockername:/home/ns3dce/dce-linux-dev/source/ns-3-dce/results/dumbbell-topology/overlapped/CwndA.png .
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
