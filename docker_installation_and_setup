@@ -6,23 +6,23 @@ sudo apt-get install docker.io
 
 sudo docker pull thehajime/ns-3-dce
 
-sudo docker run -i -t thehajime/ns-3-dce /bin/bash
+sudo docker run -i -t thehajime/ns-3-dce /bin/bash #creates a container
 
 exit
 
-sudo docker ps -a
+sudo docker ps -a  #displays all the containers available and their ids
 
-sudo docker start username
+sudo docker start username  #starts a container
 
-sudo docker exec -it username /bin/bash
+sudo docker exec -it containerid /bin/bash #opens a container 
 
 cd source/ns-3-dce
 
-./waf --run dce-iperf
+./waf --run dce-iperf  #to check whether docker has been successfully installed
 
 cd ..
 
-rm -r -f ns-3-dev/
+rm -r -f ns-3-dev/     #updating ns-3-dev version from github
 
 git clone https://gitlab.com/apoorvabhargava/ns-3-dev.git
 
@@ -112,13 +112,7 @@ goto new terminal
 sudo docker cp  dockername:/home/ns3dce/dce-linux-dev/source/ns-3-dce/results/dumbbell-topology/overlapped/CwndA.png .
 
 
-
-
-
-
-
-
-
+now we can check the graph overlapping images in CwndA.png
 
 
 
