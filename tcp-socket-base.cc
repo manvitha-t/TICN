@@ -1662,7 +1662,7 @@ m_txBuffer->NextSeg (&m_recover1, false);//m_recover1 now contains the sequence 
       // (indicating at least three segments have arrived above the current
       // cumulative acknowledgment point, which is taken to indicate loss)
       // go to step (4).
-      else if (m_txBuffer->IsLost (m_highRxAckMark + m_tcb->m_segmentSize)&&(m_recover1<m_tcb->m_highTxMark))
+      else if (m_txBuffer->IsLost (m_highRxAckMark)&&(m_recover1<m_tcb->m_highTxMark))
         {
           EnterRecovery (currentDelivered);
           NS_ASSERT (m_tcb->m_congState == TcpSocketState::CA_RECOVERY);
