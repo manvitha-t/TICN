@@ -1607,7 +1607,8 @@ TcpSocketBase::DupAck (uint32_t currentDelivered)
     {
       return;
     }
-
+SequenceNumber32 m_recover1;
+m_txBuffer->NextSeg (&m_recover1, false);//m_recover1 now contains the sequence number of next segment to be sent
   // RFC 6675, Section 5, 3rd paragraph:
   // If the incoming ACK is a duplicate acknowledgment per the definition
   // in Section 2 (regardless of its status as a cumulative
@@ -1650,16 +1651,18 @@ TcpSocketBase::DupAck (uint32_t currentDelivered)
       // RFC 6675, Section 5, continuing:
       // ... and take the following steps:
       // (1) If DupAcks >= DupThresh, go to step (4).
-      if ((m_dupAckCount == m_retxThresh) && (m_highRxAckMark >= m_recover))
+      if ((m_dupAckCount == m_retxThresh) && (m_highRxAckMark >= m_recover)&&(m_recover1<m_tcb->m_highTxMark))
         {
           EnterRecovery (currentDelivered);
           NS_ASSERT (m_tcb->m_congState == TcpSocketState::CA_RECOVERY);
         }
+    //m_recover should be less than highest sent seq becuase you are entering recovery other wise you enter recovery 
+    //for retransmitted packet
       // (2) If DupAcks < DupThresh but IsLost (HighACK + 1) returns true
       // (indicating at least three segments have arrived above the current
       // cumulative acknowledgment point, which is taken to indicate loss)
       // go to step (4).
-      else if (m_txBuffer->IsLost (m_highRxAckMark + m_tcb->m_segmentSize))
+      else if (m_txBuffer->IsLost (m_highRxAckMark + m_tcb->m_segmentSize)&&(m_recover1<m_tcb->m_highTxMark))
         {
           EnterRecovery (currentDelivered);
           NS_ASSERT (m_tcb->m_congState == TcpSocketState::CA_RECOVERY);
