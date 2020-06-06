@@ -1566,7 +1566,7 @@ TcpSocketBase::EnterRecovery (uint32_t currentDelivered)
   // RFC 6675, point (4):
   // (4) Invoke fast retransmit and enter loss recovery as follows:
   // (4.1) RecoveryPoint = HighData
-  m_recover = m_tcb->m_highTxMark;
+  m_recover = m_txBuffer->HeadSequence ();
 
   m_congestionControl->CongestionStateSet (m_tcb, TcpSocketState::CA_RECOVERY);
   m_tcb->m_congState = TcpSocketState::CA_RECOVERY;
