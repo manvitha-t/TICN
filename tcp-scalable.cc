@@ -91,7 +91,7 @@ TcpScalable::Fork (void)
 void
 TcpScalable::CongestionAvoidance (Ptr<TcpSocketState> tcb,
                                   uint32_t segmentsAcked)
-{
+{ segmentsAcked=1;
   NS_LOG_FUNCTION (this << tcb << segmentsAcked);
 
   uint32_t segCwnd = tcb->GetCwndInSegments ();
@@ -137,7 +137,7 @@ TcpScalable::GetSsThresh (Ptr<const TcpSocketState> tcb,
   uint32_t segCwnd = bytesInFlight / tcb->m_segmentSize;
 
   double b = 1.0 - m_mdFactor;
-  uint32_t ssThresh = static_cast<uint32_t> (std::max (2.0, segCwnd * b));
+  uint32_t ssThresh = static_cast<uint32_t> (std::max (2.0, segCwnd * b+1));
 
   NS_LOG_DEBUG ("Calculated b(w) = " << b <<
                 " resulting (in segment) ssThresh=" << ssThresh);
@@ -145,4 +145,4 @@ TcpScalable::GetSsThresh (Ptr<const TcpSocketState> tcb,
   return ssThresh * tcb->m_segmentSize;
 }
 
-} // namespace ns3
+} // namespace ns3 *
