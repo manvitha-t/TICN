@@ -1,3 +1,8 @@
+
+
+
+
+
 /* -*- Mode:C++; c-file-style:"gnu"; indent-tabs-mode:nil; -*- */
 /*
  * Copyright (c) 2016 ResiliNets, ITTC, University of Kansas
@@ -58,7 +63,7 @@ TcpScalable::TcpScalable (void)
   : TcpNewReno (),
     m_ackCnt (0),
     m_aiFactor (100),
-    m_mdFactor (0.875)
+    m_mdFactor (0.125)
 {
   NS_LOG_FUNCTION (this);
 }
