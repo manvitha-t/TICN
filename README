@@ -1,9 +1,9 @@
-Scalable TCP is a congestion control algorithm which does not reduce the congestion
-window (cwnd) by ½ like the traditional TCP. Instead, it reduces the cwnd by ⅞ with an aim to
-allow the sender to reach its previous cwnd value sooner. This algorithm ensures that the
-bandwidth is sufficiently utilized in the presence of transient congestion. In this project, the
-aim is to validate ns-3 Scalable TCP implementation by comparing the results obtained from it
-to those obtained by simulating Linux Scalable TCP.
+Scalable TCP is a congestion control algorithm which does not reduce the congestion window (cwnd) by ½ like the traditional TCP. Instead, it reduces the cwnd by ⅞ with an aim to
+allow the sender to reach its previous cwnd value sooner. This algorithm ensures that the bandwidth is sufficiently utilized in the presence of transient congestion. In this project, the
+aim is to validate ns-3 Scalable TCP implementation by comparing the results obtained from it to those obtained by simulating Linux Scalable TCP.
 
+STEPS TO REPRODUCE:
 Start with Docker installation procedure file and add the files,dumbbell-topology,wscript,parse_cwnd.py,overlap-gnuplotscriptCwnd as instruted in the installation file
- We have made changes to tcp-socket-base.cc which is in dce-linux-dev/source/ns-3-dev/src/internet/model/tcp-socket-base.cc and updated code is added to the repository.
+We have made changes to tcp-socket-base.cc,tcp-scalable.cc,tcp-linux-prr-recovery.cc and updated code is added to the repository.
+Copy those files into this destination in your docker container dce-linux-dev/source/ns-3-dev/src/internet/model/
+Generate the graphs as instructed in docker installation and setup to obtain the overlapped graphs.
