@@ -134,7 +134,7 @@ TcpScalable::GetSsThresh (Ptr<const TcpSocketState> tcb,
 {
   NS_LOG_FUNCTION (this << tcb << bytesInFlight);
 
-  uint32_t segCwnd = bytesInFlight / tcb->m_segmentSize;
+  uint32_t segCwnd = tcb->GetCwndInSegments();
 
   double b = 1.0 - m_mdFactor;
   uint32_t ssThresh = static_cast<uint32_t> (std::max (2.0, segCwnd * b+1));
