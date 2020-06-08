@@ -93,7 +93,7 @@ TcpScalable::CongestionAvoidance (Ptr<TcpSocketState> tcb,
                                   uint32_t segmentsAcked)
 { 
   NS_LOG_FUNCTION (this << tcb << segmentsAcked);
-
+segmentsAcked=1;
   uint32_t segCwnd = tcb->GetCwndInSegments ();
   NS_ASSERT (segCwnd >= 1);
 
