@@ -3,7 +3,121 @@ allow the sender to reach its previous cwnd value sooner. This algorithm ensures
 aim is to validate ns-3 Scalable TCP implementation by comparing the results obtained from it to those obtained by simulating Linux Scalable TCP.
 
 STEPS TO REPRODUCE:
-Start with Docker installation procedure file and add the files,dumbbell-topology,wscript,parse_cwnd.py,overlap-gnuplotscriptCwnd as instruCted in the installation file
-We have made changes to tcp-socket-base.cc,tcp-scalable.cc,tcp-linux-prr-recovery.cc and updated code is added to the repository.
-Copy those files into this destination in your docker container dce-linux-dev/source/ns-3-dev/src/internet/model/
-Generate the graphs as instructed in docker installation and setup to obtain the overlapped graphs.
+1)Add the following files given in repository to your home directory: 
+  -dumbbelltopologyns3receiver.cc
+  -wscript
+  -parse_cwnd.py
+  -overlap-gnuplotscriptCwnd
+  -tcp-scalable.cc
+  -tcp-linux-prr-recovery.cc
+  -tcp-socket-base.cc
+  
+ 2)Following are the commands for docker installation:
+    sudo apt-get update
+
+    sudo apt-get install docker.io
+
+    sudo docker pull thehajime/ns-3-dce
+
+    sudo docker run -i -t thehajime/ns-3-dce /bin/bash #creates a container
+
+    exit #to exit the docker
+
+ 3)Following are the commands to work in a container:
+    sudo docker ps -a  #displays all the containers available and their ids
+
+    sudo docker start container-name  #starts a container. Example: sudo docker start clever_morse
+
+    sudo docker exec -it containerid /bin/bash #opens a container
+    
+ 4)Run the following command to check if docker has been installed successfully.
+    cd source/ns-3-dce
+
+    ./waf --run dce-iperf  #to check whether docker has been successfully installed
+    
+ 5)Clone ns-3-dev from this repository, run the following commands in source directory.
+    rm -r -f ns-3-dev/     #updating ns-3-dev version from github
+
+    git clone https://gitlab.com/apoorvabhargava/ns-3-dev.git
+
+    cd ns-3-dev
+
+    git checkout LinuxPRRMergeRequest
+    
+  6)To copy the files from home directory to docker run the following commands in a new terminal
+    Note: Replace container-name with your container name, example clever_morse.
+    
+    sudo docker cp dumbbelltopologyns3receiver.cc dockername:/home/ns3dce/dce-linux-dev/source/ns-3-dce/example
+
+    sudo docker cp wscript container-name:/home/ns3dce/dce-linux-dev/source/ns-3-dce
+
+    sudo docker cp parse_cwnd.py container-name:/home/ns3dce/dce-linux-dev/source/ns-3-dce/utils
+
+    sudo docker cp overlap-gnuplotscriptCwnd container-name:/home/ns3dce/dce-linux-dev/source/ns-3-dce/results/dumbbell-topology/overlapped
+
+    sudo docker cp tcp-socket-base.cc container-name:/home/ns3dce/dce-linux-dev/source/ns-3-dev/src/internet/model
+    
+    sudo docker cp tcp-linux-prr-recovery.cc container-name:/home/ns3dce/dce-linux-dev/source/ns-3-dev/src/internet/model
+    
+    sudo docker cp tcp-scalable.cc container-name:/home/ns3dce/dce-linux-dev/source/ns-3-dev/src/internet/model
+    
+    close this terminal.
+    
+  7)In order to store the generated graphs make the following directories in source/ns-3-dce location in container, run the commands:
+    mkdir results
+
+    cd results
+
+    mkdir dumbbell-topology
+
+    cd dumbbell-topology
+
+    mkdir overlapped
+    
+  8)Run the following commands to build and generate the graphs in dce-linux-dev location:
+    export BAKE_HOME=`pwd`/bake
+    export PATH=$PATH:$BAKE_HOME
+    export PYTHONPATH=$PYTHONPATH:$BAKE_HOME
+
+    bake.py configure -e dce-linux-dev
+
+    bake.py build -vvv
+
+    cd source/ns-3-dce
+
+    ./waf --run "dumbbelltopologyns3receiver --stack=linux -queue_disc_type=FifoQueueDisc -WindowScaling=true --Sack=true --stopTime=300 --delAckCount=1 --BQL=true --linux_prot=scalable"
+
+    cd utils
+
+    python parse_cwnd.py 2 2 #generates linux plot
+
+    cd ..
+
+    cd results/dumbbell-topology
+
+    cp cwnd_data/A-linux.plotme overlapped/ #copies linux plot to overlapped directory
+
+    cd ..
+
+    cd ..
+
+    ./waf --run "dumbbelltopologyns3receiver --stack=ns3 -queue_disc_type=FifoQueueDisc -WindowScaling=true --Sack=true --stopTime=300 --delAckCount=1 --BQL=true --transport_prot=TcpScalable --recovery=TcpLinuxPrrRecovery" #generates ns-3 plot 
+
+    cd results/dembbell-topology
+    
+    ls #displays the timestamps
+  
+    cp timestamp/cwndTraces/A-ns3.plotme overlapped/ #replace timestamp with the latest timestamp generated
+
+    cd overlapped
+
+    ls
+
+    sudo apt-get install gnuplot #skip if already installed
+
+    gnuplot overlap-gnuplotscriptCwnd #displays both linux and ns-3 plots as one single image CwndA.png 
+
+  9)To copy CwndA.png open new terminal and run the following command:
+    sudo docker cp  dockername:/home/ns3dce/dce-linux-dev/source/ns-3-dce/results/dumbbell-topology/overlapped/CwndA.png . #copies CwndA.png to home directory
+
+  10)To view the plot open CwndA.png in home directory.
